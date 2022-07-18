@@ -1,4 +1,4 @@
-function asTabs(cls = 'tabdivs') {
+function tabdivs(cls = 'tabdivs') {
   // Set up the tab styles
   const styleSheet = document.createElement('style')
   styleSheet.type = 'text/css'
@@ -45,7 +45,7 @@ function asTabs(cls = 'tabdivs') {
         const li = document.createElement('li')
         const btn = document.createElement('button')
         btn.dataset.tabIndex = x
-        const tabLabel = document.createTextNode(`Tab ${x + 1}`)
+        const tabLabel = document.createTextNode(tabDivs[x].dataset.tabLabel ?? `Tab ${x + 1}`)
         btn.appendChild(tabLabel)
         li.appendChild(btn)
         tabList.appendChild(li)
@@ -75,7 +75,7 @@ function asTabs(cls = 'tabdivs') {
 }
 
 function tabdivsInit() {
-  window.addEventListener('load', () => asTabs())
+  window.addEventListener('load', () => tabdivs())
 }
 
 tabdivsInit()
