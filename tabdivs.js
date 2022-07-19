@@ -6,15 +6,26 @@ function tabdivs(cls = 'tabdivs') {
   body {
     transition: all 1s;
   }
+  .visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap; /* added line */
+    border: 0;
+  }
   .${cls} > div {
     padding: 1em;
     margin: 0 1em 1em;
     border: 1px solid green;
+    display: block;
     box-shadow: 5px 5px pink;
-    display: none;
+    height: initial;
   }
   .${cls} > div.selected {
-    display: block;
   }
   .${cls} ul {
     margin: 1em 0 0;
@@ -24,7 +35,6 @@ function tabdivs(cls = 'tabdivs') {
     margin-right: .5em;
   }
   .${cls} button {
-    border-radius: .2em;
     border: 1px solid gray;
     border-bottom: 0;
   }
@@ -45,7 +55,7 @@ function tabdivs(cls = 'tabdivs') {
         const li = document.createElement('li')
         const btn = document.createElement('button')
         btn.dataset.tabIndex = x
-        const tabLabel = document.createTextNode(tabDivs[x].dataset.tabLabel ?? `Tab ${x + 1}`)
+        const tabLabel = document.createTextNode(tabDivs[x].dataset.tabLabel || `Tab ${x + 1}`)
         btn.appendChild(tabLabel)
         li.appendChild(btn)
         tabList.appendChild(li)
@@ -58,17 +68,18 @@ function tabdivs(cls = 'tabdivs') {
             'click',
             evt => {
               const thisButton = evt.target
+              const tabIndex = thisButton.dataset.tabIndex
               tabButtons.forEach(elt => elt.classList.remove('selected'))
-              tabDivs.forEach(elt => elt.classList.remove('selected'))
+              tabDivs.forEach(elt => elt.classList.add('visually-hidden'))
               thisButton.classList.add('selected')
-              tabDivs[thisButton.dataset.tabIndex].classList.add('selected')
+              tabDivs[tabIndex].classList.remove('visually-hidden')
             }
           )
         }
       )
       // Initialize to show first tab
       tabButtons[0].classList.add('selected')
-      tabDivs[0].classList.add('selected')
+      tabDivs.forEach((elt, idx) => idx > 0 && elt.classList.add('visually-hidden'))
       tabGroup.insertBefore(tabList, tabGroup.firstChild)
     }
   )
