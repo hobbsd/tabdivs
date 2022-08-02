@@ -51,15 +51,17 @@ function tabdivs(cls = 'tabdivs') {
       const tabDivs = tabGroup.querySelectorAll(':scope > div')
       const tabList = document.createElement('ul')
       // Create an <li> containing tab button for eaach tabbed div
-      for (let x = 0; x < tabDivs.length; x++) {
-        const li = document.createElement('li')
-        const btn = document.createElement('button')
-        btn.dataset.tabIndex = x
-        const tabLabel = document.createTextNode(tabDivs[x].dataset.tabLabel || `Tab ${x + 1}`)
-        btn.appendChild(tabLabel)
-        li.appendChild(btn)
-        tabList.appendChild(li)
-      }
+      tabDivs.forEach(
+        (tabDiv, x) => {
+          const li = document.createElement('li')
+          const btn = document.createElement('button')
+          btn.dataset.tabIndex = x
+          const tabLabel = document.createTextNode(tabDiv.dataset.tabLabel || `Tab ${x + 1}`)
+          btn.appendChild(tabLabel)
+          li.appendChild(btn)
+          tabList.appendChild(li)
+        }
+      )
       const tabButtons = tabList.querySelectorAll(':scope > li > button')
       // Add event handler for each tab button
       tabButtons.forEach(
