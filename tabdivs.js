@@ -38,6 +38,9 @@ function tabdivs(cls = 'tabdivs') {
     border: 1px solid gray;
     border-bottom: 0;
   }
+  .${cls} button[aria-selected='false'] {
+    cursor: pointer;
+  }
   [aria-selected='true'] {
     background-color: white;
     border-color: blue;
@@ -59,9 +62,9 @@ function tabdivs(cls = 'tabdivs') {
           const tabpanelId = `tabpanel-${groupNum}-${divNum}`
           tabDiv.setAttribute('id', tabpanelId)
           tabDiv.setAttribute('aria-expanded', 'false')
+          tabDiv.setAttribute('role', 'tabpanel')
           btn.setAttribute('role', 'tab')
           btn.setAttribute('aria-selected', 'false')
-          btn.dataset.tabIndex = divNum
           btn.setAttribute('aria-controls', tabpanelId)
           const tabLabel = document.createTextNode(tabDiv.dataset.tabLabel || `Tab ${divNum + 1}`)
           btn.appendChild(tabLabel)
