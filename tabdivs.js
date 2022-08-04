@@ -6,7 +6,7 @@ function tabdivs(cls = 'tabdivs') {
   body {
     transition: all 1s;
   }
-  .visually-hidden {
+  [aria-expanded='false'] {
     position: absolute;
     width: 1px;
     height: 1px;
@@ -38,7 +38,7 @@ function tabdivs(cls = 'tabdivs') {
     border: 1px solid gray;
     border-bottom: 0;
   }
-  button.selected {
+  [aria-selected='true'] {
     background-color: white;
     border-color: blue;
   }
@@ -47,16 +47,23 @@ function tabdivs(cls = 'tabdivs') {
 
   const tabGroups = document.querySelectorAll(`.${cls}`)
   tabGroups.forEach(
-    tabGroup => {
+    (tabGroup, groupNum) => {
       const tabDivs = tabGroup.querySelectorAll(':scope > div')
       const tabList = document.createElement('ul')
-      // Create an <li> containing tab button for eaach tabbed div
+      tabList.setAttribute('role', 'tablist')
+      // Build the tablist and setup the divs to be tabpanels
       tabDivs.forEach(
-        (tabDiv, x) => {
+        (tabDiv, divNum) => {
           const li = document.createElement('li')
           const btn = document.createElement('button')
-          btn.dataset.tabIndex = x
-          const tabLabel = document.createTextNode(tabDiv.dataset.tabLabel || `Tab ${x + 1}`)
+          const tabpanelId = `tabpanel-${groupNum}-${divNum}`
+          tabDiv.setAttribute('id', tabpanelId)
+          tabDiv.setAttribute('aria-expanded', 'false')
+          btn.setAttribute('role', 'tab')
+          btn.setAttribute('aria-selected', 'false')
+          btn.dataset.tabIndex = divNum
+          btn.setAttribute('aria-controls', tabpanelId)
+          const tabLabel = document.createTextNode(tabDiv.dataset.tabLabel || `Tab ${divNum + 1}`)
           btn.appendChild(tabLabel)
           li.appendChild(btn)
           tabList.appendChild(li)
@@ -70,18 +77,18 @@ function tabdivs(cls = 'tabdivs') {
             'click',
             evt => {
               const thisButton = evt.target
-              const tabIndex = thisButton.dataset.tabIndex
-              tabButtons.forEach(elt => elt.classList.remove('selected'))
-              tabDivs.forEach(elt => elt.classList.add('visually-hidden'))
-              thisButton.classList.add('selected')
-              tabDivs[tabIndex].classList.remove('visually-hidden')
+              const tabpanelId = thisButton.getAttribute('aria-controls')
+              tabButtons.forEach(elt => elt.setAttribute('aria-selected', 'false'))
+              tabDivs.forEach(elt => elt.setAttribute('aria-expanded', 'false'))
+              thisButton.setAttribute('aria-selected', 'true')
+              document.getElementById(tabpanelId).setAttribute('aria-expanded', 'true')
             }
           )
         }
       )
       // Initialize to show first tab
-      tabButtons[0].classList.add('selected')
-      tabDivs.forEach((elt, idx) => idx > 0 && elt.classList.add('visually-hidden'))
+      tabButtons[0].setAttribute('aria-selected', true)
+      tabDivs[0].setAttribute('aria-expanded', true)
       tabGroup.insertBefore(tabList, tabGroup.firstChild)
     }
   )
