@@ -60,9 +60,12 @@ function tabdivs(cls = 'tabdivs') {
           const li = document.createElement('li')
           const btn = document.createElement('button')
           const tabpanelId = `tabpanel-${groupNum}-${divNum}`
+          const tabId = `tab-${groupNum}-${divNum}`
           tabDiv.setAttribute('id', tabpanelId)
           tabDiv.setAttribute('aria-expanded', 'false')
           tabDiv.setAttribute('role', 'tabpanel')
+          tabDiv.setAttribute('aria-labelledby', tabId)
+          btn.setAttribute('id', tabId)
           btn.setAttribute('role', 'tab')
           btn.setAttribute('aria-selected', 'false')
           btn.setAttribute('aria-controls', tabpanelId)
